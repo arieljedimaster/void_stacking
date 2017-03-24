@@ -21,9 +21,12 @@ from void_stack import *
 
 maps_pwd = '/Users/shared/ariel/Maps/Coadded/'
 
-code_pwd = '/Users/arielamaral/Code/void_code/'
+code_pwd = '/Users/arielamaral/Code/void_stacking/'
 
-map_dump = '/Users/arielamaral/Code/void_code/old_map_old_cat/'
+#map_dump = '/Users/arielamaral/Code/void_code/old_map_old_cat/'
+#map_dump =  '/Users/arielamaral/Code/void_stacking/old_map_old_cat/'
+
+#map dump is now specified in the main python code!! (makes it easier, so we never have to change things here)
 
 deep5_map_dump = code_pwd+'deep5_plots/' #all plots relating to deep 5 go here
 
@@ -42,7 +45,7 @@ def degrees_to_pix(r_deg):
     r_pix = r_arcmin / pix_scale 
     return r_pix
 
-def void_stack_bin_plot(stacked_voids_bin,R,num_in_stack,j,dT_void_stack_in_bin):
+def void_stack_bin_plot(stacked_voids_bin,R,num_in_stack,j,dT_void_stack_in_bin,map_dump):
     #saving a figure of the stacked voids
     
     #plt.figure()
@@ -91,7 +94,7 @@ def void_stack_bin_plot(stacked_voids_bin,R,num_in_stack,j,dT_void_stack_in_bin)
     print 'The total number of random locations stacked in bin '+ str(j) + ' is ' + str(num_in_stack)
     return
 
-def rand_stack_bin_plot(stacked_rand_bin,R,num_in_stack,j,dT_rand_stack_in_bin):
+def rand_stack_bin_plot(stacked_rand_bin,R,num_in_stack,j,dT_rand_stack_in_bin,map_dump):
     #saving a figure of the stacked voids
 
     print "R in pixel scale", degrees_to_pix(R) 
@@ -128,7 +131,7 @@ def rand_stack_bin_plot(stacked_rand_bin,R,num_in_stack,j,dT_rand_stack_in_bin):
     return
 
 
-def delta_T_hist_bin_plot(del_T_list,delT_mean,del_T_list_rand,delT_mean_rand,j):
+def delta_T_hist_bin_plot(del_T_list,delT_mean,del_T_list_rand,delT_mean_rand,j, map_dump):
     plt.figure()
     yrange = np.zeros(300)
     plt.hist(del_T_list, bins=20, histtype='stepfilled', color ='b',alpha=0.5, label = 'Void Filtered Temp')
@@ -143,7 +146,7 @@ def delta_T_hist_bin_plot(del_T_list,delT_mean,del_T_list_rand,delT_mean_rand,j)
 
     return
 
-def delta_T_vs_r_eff_bin_plot(del_T_list, void_r_eff_in_bin, j):            
+def delta_T_vs_r_eff_bin_plot(del_T_list, void_r_eff_in_bin, j, map_dump):            
     #plot of delta_T versus void radius
     #recreating Figure 2 from Cai et al. (2016) for each bin
     plt.figure()
@@ -159,7 +162,7 @@ def delta_T_vs_r_eff_bin_plot(del_T_list, void_r_eff_in_bin, j):
 # These plots are for ALL of the voids, they do not depend or radial bins, or maps
 # They go outside all of the loops in main.py
 
-def rescaled_stacked_map_per_bin_plot(stacked_map_bin,rescaled_map,z,R_filt,R_filt_ref):
+def rescaled_stacked_map_per_bin_plot(stacked_map_bin,rescaled_map,z,R_filt,R_filt_ref,map_dump):
     '''
     Plots both the rescaled map and the original map to see the pixel number difference
     all_stacked_maps[z] = stack_map_bin
@@ -210,7 +213,7 @@ def rescaled_stacked_map_per_bin_plot(stacked_map_bin,rescaled_map,z,R_filt,R_fi
     fig.savefig(map_dump + "rescale_orig_bin_"+str(z)+"_void.png")
     return
     
-def rescaled_stacked_map_per_bin_plot_rand(stacked_rand_bin,rescaled_map,z,R_filt,R_filt_ref):
+def rescaled_stacked_map_per_bin_plot_rand(stacked_rand_bin,rescaled_map,z,R_filt,R_filt_ref, map_dump):
     '''
     Plots both the rescaled map and the original map to see the pixel number difference
     all_stacked_maps[z] = stack_map_bin
@@ -262,7 +265,7 @@ def rescaled_stacked_map_per_bin_plot_rand(stacked_rand_bin,rescaled_map,z,R_fil
     
     return
 
-def total_rescaled_stacked_map_plot(total_rescaled_stack,R,rescaled_dT_void):
+def total_rescaled_stacked_map_plot(total_rescaled_stack,R,rescaled_dT_void, map_dump):
     void_cent_x = total_rescaled_stack.shape[0]/2.0
     void_cent_y = total_rescaled_stack.shape[1]/2.0
     
@@ -283,7 +286,7 @@ def total_rescaled_stacked_map_plot(total_rescaled_stack,R,rescaled_dT_void):
     plt.savefig(map_dump+"rescaled_stack_voids.png")
     return
     
-def total_rescaled_stacked_map_plot_rand(total_rescaled_stack, R,rescaled_dT_rand):
+def total_rescaled_stacked_map_plot_rand(total_rescaled_stack, R,rescaled_dT_rand,map_dump):
 
     void_cent_x = total_rescaled_stack.shape[0]/2.0
     void_cent_y = total_rescaled_stack.shape[1]/2.0
@@ -305,7 +308,7 @@ def total_rescaled_stacked_map_plot_rand(total_rescaled_stack, R,rescaled_dT_ran
 
     return
 
-def void_temp_profile_plot(void_r_eff_avg, avg_delT_bin, err_delT_bin_upper, err_delT_bin_lower,n):
+def void_temp_profile_plot(void_r_eff_avg, avg_delT_bin, err_delT_bin_upper, err_delT_bin_lower,n,map_dump):
     plt.figure()
     
     plt.plot(void_r_eff_avg, avg_delT_bin, 'ko-', linewidth = 2)
@@ -319,7 +322,7 @@ def void_temp_profile_plot(void_r_eff_avg, avg_delT_bin, err_delT_bin_upper, err
     plt.savefig(map_dump + "temp_void_profile_for_"+str(n)+"bins.png")
     return
     
-def delT_significance_plot_bin(sig_list, j):
+def delT_significance_plot_bin(sig_list, j, map_dump):
     plt.figure()
     #yrange = np.zeros(300)
     plt.hist(sig_list, bins=20, histtype='stepfilled', color ='b',alpha=0.5, label = 'Void Filtered Temp')

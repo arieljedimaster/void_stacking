@@ -23,9 +23,9 @@ from void_cat_load import *
 
 maps_pwd = '/Users/shared/ariel/Maps/Coadded/'
 
-code_pwd = '/Users/arielamaral/Code/void_code/'
+code_pwd = '/Users/arielamaral/Code/void_stacking/'
 
-map_dump = '/Users/arielamaral/Code/void_code/old_map_old_cat/'
+map_dump = '/Users/arielamaral/Code/void_stacking/old_map_old_cat/'
 
 deep5_map_dump = code_pwd+'deep5_plots/' #all plots relating to deep 5 go here
 
@@ -258,12 +258,12 @@ for j in np.arange(0,len(void_RA)):
         
         #saving a figure of the stacked voids
         dT_void_stack_in_bin = array_mask(stacked_voids_bin, R)
-        void_stack_bin_plot(stacked_voids_bin,R,num_in_stack,j,dT_void_stack_in_bin)
+        void_stack_bin_plot(stacked_voids_bin,R,num_in_stack,j,dT_void_stack_in_bin,map_dump)
         
         #####################################################################
         #plotting the stacked random locations
         dT_rand_stack_in_bin = array_mask(stacked_rand_bin, R)
-        rand_stack_bin_plot(stacked_rand_bin,R,num_in_stack,j,dT_rand_stack_in_bin)
+        rand_stack_bin_plot(stacked_rand_bin,R,num_in_stack,j,dT_rand_stack_in_bin,map_dump)
         
 
         
@@ -279,11 +279,11 @@ for j in np.arange(0,len(void_RA)):
         
 
         #generating a histogram of the temperature distribution in void and random locations
-        delta_T_hist_bin_plot(del_T_list,delT_mean,del_T_list_rand,delT_mean_rand,j)
+        delta_T_hist_bin_plot(del_T_list,delT_mean,del_T_list_rand,delT_mean_rand,j,map_dump)
         #do a KS test here?
         
         #delta_T vs. R_eff plot
-        delta_T_vs_r_eff_bin_plot(del_T_list, void_r_eff_in_bin, j)
+        delta_T_vs_r_eff_bin_plot(del_T_list, void_r_eff_in_bin, j, map_dump)
         
         temp_std = SN_std(mod_smaps, 'whole map', R)
         
@@ -293,7 +293,7 @@ for j in np.arange(0,len(void_RA)):
         
         #plot the significance histogram
         
-        delT_significance_plot_bin(sig_list, j)
+        delT_significance_plot_bin(sig_list, j,map_dump)
         
         
         
@@ -323,13 +323,13 @@ for z in np.arange(0, len(all_stacked_maps)):
     rescaled_map = stack_rescale(all_stacked_maps[z], R_filt_list[z], R_filt_ref)
     rescaled_stacked_maps.append(rescaled_map)
     #plotting each of the individual rescaled stacked maps:
-    rescaled_stacked_map_per_bin_plot(all_stacked_maps[z],rescaled_map,z,R_filt_list[z], R_filt_ref)
+    rescaled_stacked_map_per_bin_plot(all_stacked_maps[z],rescaled_map,z,R_filt_list[z], R_filt_ref,map_dump)
     
     #lets do the same for random locations as well
     rescaled_map_rand = stack_rescale(all_stacked_maps_rand[z], R_filt_list[z], R_filt_ref)
     rescaled_stacked_maps_rand.append(rescaled_map_rand)
     #plotting the individual random rescaled maps
-    rescaled_stacked_map_per_bin_plot_rand(all_stacked_maps_rand[z],rescaled_map_rand,z,R_filt_list[z], R_filt_ref)
+    rescaled_stacked_map_per_bin_plot_rand(all_stacked_maps_rand[z],rescaled_map_rand,z,R_filt_list[z], R_filt_ref,map_dump)
     
 
 #now we will put together all of the maps into one rescaled stack
@@ -346,9 +346,9 @@ rescaled_dT_rand = array_mask(total_rescaled_stack_rand, R_filt_ref)
 
 #now we can plot what this total rescaled stacked map looks like
 
-total_rescaled_stacked_map_plot(total_rescaled_stack,R_filt_ref,rescaled_dT_void)
+total_rescaled_stacked_map_plot(total_rescaled_stack,R_filt_ref,rescaled_dT_void,map_dump)
 
-total_rescaled_stacked_map_plot_rand(total_rescaled_stack_rand, R_filt_ref,rescaled_dT_rand)
+total_rescaled_stacked_map_plot_rand(total_rescaled_stack_rand, R_filt_ref,rescaled_dT_rand, map_dump)
 
 #calculating the void temperature profile from the various radial bins
 
@@ -356,5 +356,5 @@ avg_delT_bin, err_delT_bin_upper, err_delT_bin_lower = void_temperature_profile(
 
 
 #plotting the void temperature profile
-void_temp_profile_plot(void_r_eff_avg, avg_delT_bin, err_delT_bin_upper, err_delT_bin_lower,n)
+void_temp_profile_plot(void_r_eff_avg, avg_delT_bin, err_delT_bin_upper, err_delT_bin_lower,n, map_dump)
 
