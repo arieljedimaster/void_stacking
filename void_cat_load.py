@@ -1,3 +1,6 @@
+from astropy.io import fits
+import numpy as np
+
 #code to open fits file and sort through columns for use in code
 #fits file is a new void catalogue
 
@@ -5,9 +8,6 @@ def get_void_info_from_fits():
 	'''
 	Get void info from the fits file, instead of text file.
 	'''
-
-	from astropy.io import fits
-	import numpy as np
 
 	void_catalogue = fits.open('voids_los-size10-50_nside256_vth21_nlev23.fit')
 

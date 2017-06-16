@@ -71,11 +71,15 @@ act_map_deep6 = act_map_deep_6
 
 #void_RA, void_Dec, void_r_eff, void_cent, void_vol, void_r_eff_2, void_ID, void_dens = np.loadtxt('void_info.txt', unpack=True)
 
-maps = [act_map_deep5_2, act_map_deep56_AR2_2, act_map_deep6, act_map_deep56_AR2_1, act_map_deep5_1, act_map_deep56_AR1_1, act_map_deep56_AR1_2]
+#maps = [act_map_deep5_2, act_map_deep56_AR2_2, act_map_deep6, act_map_deep56_AR2_1, act_map_deep5_1, act_map_deep56_AR1_1, act_map_deep56_AR1_2]
 
-#maps = [act_map_deep56_2] #if i just want to test one map use this and change to desired map
 
-map_names = ["act_map_deep5_2", "act_map_deep56_AR2_2", "act_map_deep6", "act_map_deep56_AR2_1", "act_map_deep5_1", "act_map_deep56_AR1_1", "act_map_deep56_AR1_2"]
+maps = [act_map_deep5_2] #if i just want to test one map use this and change to desired map
+
+
+#map_names = ["act_map_deep5_2", "act_map_deep56_AR2_2", "act_map_deep6", "act_map_deep56_AR2_1", "act_map_deep5_1", "act_map_deep56_AR1_1", "act_map_deep56_AR1_2"]
+
+map_names = ["act_map_deep5_2"]
 
 map_dict = dict(zip(maps,map_names))
 
@@ -110,6 +114,8 @@ void_r_ang = arcmin_to_degrees(void_r_ang)
 
 #change all void_RA to positive ones
 void_RA = neg_void_RA(void_RA)
+
+print "Total length of the catalogue: ", len(void_RA)
 
 ###########################
 #can load in cluster info here too
@@ -147,7 +153,8 @@ all_stacked_maps_rand = []
 R_filt_list = []
 
 #looping through each bin
-for j in np.arange(0,len(void_RA)):
+#for j in np.arange(0,len(void_RA)):
+for j in np.arange(0,1):
     print "                    "
     print "############# Stacking for Bin ", j
     print "                    "
@@ -223,6 +230,7 @@ for j in np.arange(0,len(void_RA)):
             inner_circ_list.append(inner_circ) #appending to giant list of all inner circles
             mod_smap = mod_filt(smap, annulus)
             mod_smaps.append(mod_smap) #appending to giant list of all modified smaps
+            print "smap info for void # ", str(k), np.mean(smap.data[:]), np.std(smap.data[:])
             
             #stacking for random locations
             smap_rand = map.selectSubMap(rand_RA[k]-bound_x, rand_RA[k] + bound_x, rand_Dec[k] - bound_y, rand_Dec[k] + bound_y)

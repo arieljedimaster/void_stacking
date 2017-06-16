@@ -39,10 +39,13 @@ def min_dim_of_list_of_arrays(list_of_arrays):
     Will return list (y,x) of the minimum dimensions of
     all of the submaps
     '''
+    #print "List of arrays: ", list_of_arrays
     dim_list_x = []
     dim_list_y = []
     for z in np.arange(0, len(list_of_arrays)):
+    	#print list_of_arrays[z]
         dat = list_of_arrays[z]
+        #print dat
         dim_list_x.append(dat.shape[1])
         dim_list_y.append(dat.shape[0])
         
@@ -87,9 +90,13 @@ def stacked_voids(filt_array):
             #croppping all subamps to make sure they all have the same dimensions
             filt_dat_crop = crop_array(filt_data_array[k], dim_list)
             filt_data_sum = filt_data_sum + filt_dat_crop
+            print "stacked info for void # ", str(k), np.mean(filt_data_sum), np.std(filt_data_sum)
             counter += 1.
+            
         #filt_data_avg = filt_data_sum/len(filt_array)
-        filt_data_avg = filt_data_sum/counter
+        print "the counter we're dividing by: ", counter
+        filt_data_avg = filt_data_sum/float(counter)
+        print "Final dimension of stacked map: ", filt_data_avg.shape
         
         '''
         # we dont care to use litemaps anymore
@@ -116,7 +123,7 @@ def stack_rescale(stacked_map, R_filt, R_filt_ref):
 def stack_rescale(stacked_map, R_filt, R_filt_ref):
     
     rescale_param = R_filt_ref/R_filt
-    #rescale_param = R_filt/R_filt_ref #flipped it around, making larger maps smaller
+    #rescale_param = R_filt/R_filt_ref #flipped it around, making smaller maps larger
     
     print "The rescaling parameter from the filters is: ", rescale_param
 
@@ -181,14 +188,15 @@ def void_temperature_profile(delt_T_for_bin):
 	
     return avg_delT_bin, err_delT_bin_upper, err_delT_bin_lower
     
-def degrees_to_pix(r_deg):
+def degrees_to_pix(r_deg,ref_map):
     r_arcmin = 60*r_deg #degrees to arcmins
-    pix_scale_x = 0.00014532290052643554 # for act_map_deep5_2.pixScaleX
+    #pix_scale_x = 0.00014532290052643554 # for act_map_deep5_2.pixScaleX
+    pix_scale_x = ref_map.pixScaleX
     pix_scale = (pix_scale_x)*((180/np.pi) *(60)) #I chose a random specific map to use
     r_pix = r_arcmin / pix_scale 
     return r_pix
     
-def array_mask(data_array, R_filt):
+def array_mask(data_array, R_filt, ref_map):
     '''
     masks out data outside a disk, this does the same as the
     flipper mask function. but then we take the average temp in that disk - this represents 
@@ -201,8 +209,28 @@ def array_mask(data_array, R_filt):
     cent_y = data_array.shape[1]/2.0
 
     #changing r to pixel scales
-    r_pix = degrees_to_pix(R_filt)
+    r_pix = degrees_to_pix(R_filt, ref_map)
+    
+    print "yo i changed this"
+    
+    y_size, x_size = data_array.shape
 
+    x = np.arange(0,x_size)
+    y = np.arange(0,y_size)
+
+    xv, yv = np.meshgrid(x,y)
+
+    distances = np.sqrt((cent_x - xv)**2. + (cent_y - yv)**2.)
+
+    circ_y,circ_x = np.where(distances < r_pix)
+
+    circ_ind = np.where(distances < r_pix)
+
+    circ_vals = data_array[circ_ind]
+    
+    delta_T = np.sum(circ_vals)/float(len(circ_vals))
+    
+    '''
     array_size = data_array.shape
     mask = np.zeros(array_size)
     num_pix = 0 #number of non-zero pixels
@@ -214,8 +242,8 @@ def array_mask(data_array, R_filt):
                 num_pix +=1
 
     inner_circ = mask*data_array
-
     delta_T = np.sum(inner_circ)/float(num_pix)
+    '''
     return delta_T
     
     
