@@ -30,9 +30,9 @@ The code contains the following python files:
 
 To run the code:
 
-ipython: run main_faster.py -
+ipython: "run main_faster.py -"
 or
-python2.7 main_faster.py
+"python2.7 main_faster.py"
 That's it! you just run the main_faster python file and it'll do the rest!
 The only thing you'll ever have to change is the first few lines of code in this file which is outlined above
 
